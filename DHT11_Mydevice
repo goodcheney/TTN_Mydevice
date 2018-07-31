@@ -3,7 +3,8 @@
 #include <hal/hal.h>
 #include <SPI.h>
 dht DHT;
-#define DHT11_PIN A0
+#define DHT11_PIN A1
+#define PIN_A A0
 
 float temperature,humidity;      
 float tem,hum;
@@ -15,24 +16,25 @@ String datastring2="";
 String datastring3="";
 
 
-static uint8_t mydata[7] = {0x01,0x67,0x00,0x00,0x02,0x68,0x00};  
+static uint8_t mydata[11] = {0x01,0x67,0x00,0x00,0x02,0x68,0x00,0x03,0x65,0x00,0x00};
+//static uint8_t mydata[7] = {0x01,0x67,0x00,0x00,0x02,0x68,0x00};    
 /* LoRaWAN NwkSKey, network session key
    This is the default Semtech key, which is used by the prototype TTN
    network initially.
    ttn*/
-static const PROGMEM u1_t NWKSKEY[16] = { 0x78, 0xD6, 0xDF, 0xB6, 0x6A, 0x14, 0xAA, 0x1F, 0x45, 0x59, 0xAE, 0x7D, 0x63, 0xCF, 0xA3, 0xA2 };
+static const PROGMEM u1_t NWKSKEY[16] = { 0x0D, 0x10, 0xFF, 0x5F, 0xD4, 0xFC, 0xB0, 0x02, 0xCD, 0x17, 0x2F, 0x32, 0xBA, 0x4C, 0x0F, 0x23 };
 
 /* LoRaWAN AppSKey, application session key
    This is the default Semtech key, which is used by the prototype TTN
    network initially.
    ttn*/
-static const u1_t PROGMEM APPSKEY[16] = { 0xDE, 0x3A, 0xCC, 0x72, 0x38, 0x34, 0x81, 0x80, 0x44, 0x2E, 0x37, 0x36, 0xB3, 0x01, 0x04, 0x60 };
+static const u1_t PROGMEM APPSKEY[16] = { 0x90, 0x55, 0xB1, 0x87, 0x15, 0xAB, 0xA1, 0xF8, 0xC0, 0x04, 0xE9, 0x67, 0x59, 0x3B, 0x81, 0xC5 };
 
 /*
  LoRaWAN end-device address (DevAddr)
  See http://thethingsnetwork.org/wiki/AddressSpace
  ttn*/
-static const u4_t DEVADDR = 0x26011025;
+static const u4_t DEVADDR = 0x26011B66;
 
 
 /* These callbacks are only used in over-the-air activation, so they are
@@ -64,6 +66,7 @@ void do_send(osjob_t* j){
     } else {
         
         dhtTem();
+        light();
         // Prepare upstream data transmission at the next possible time.
         //  LMIC_setTxData2(1,datasend,sizeof(datasend)-1,0);
         LMIC_setTxData2(1, mydata, sizeof(mydata), 0);
@@ -215,15 +218,25 @@ void dhtTem()
        count++;
        tem1=(tem*10);
        mydata[2] = tem1>>8;
-       mydata[3]=tem1;
-
+       mydata[3]= tem1;
        mydata[6] = hum * 2;
        
 }
 
+void light(){
+      int16_t lux;
+      int val,val1;
+      val=analogRead(PIN_A);
+      Serial.print("a:");
+      Serial.println(val);
+      delay(500);
+      val1=val*1.0;
+      lux=val1;
+      mydata[9]=lux>>8;
+      mydata[10]=lux;
+       Serial.print(lux);
+}
 void loop() {
     os_runloop_once();
-     
-   
-    
+       
 }
