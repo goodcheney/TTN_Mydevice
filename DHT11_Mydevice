@@ -17,7 +17,6 @@ String datastring3="";
 
 
 static uint8_t mydata[11] = {0x01,0x67,0x00,0x00,0x02,0x68,0x00,0x03,0x65,0x00,0x00};
-//static uint8_t mydata[7] = {0x01,0x67,0x00,0x00,0x02,0x68,0x00};    
 /* LoRaWAN NwkSKey, network session key
    This is the default Semtech key, which is used by the prototype TTN
    network initially.
@@ -86,37 +85,37 @@ void onEvent (ev_t ev) {
     Serial.println(ev);
     switch(ev) {
         case EV_SCAN_TIMEOUT:
-            Serial.println("EV_SCAN_TIMEOUT");
+            Serial.println(F("EV_SCAN_TIMEOUT"));
             break;
         case EV_BEACON_FOUND:
-            Serial.println("EV_BEACON_FOUND");
+            Serial.println(F("EV_BEACON_FOUND"));
             break;
         case EV_BEACON_MISSED:
-            Serial.println("EV_BEACON_MISSED");
+            Serial.println(F("EV_BEACON_MISSED"));
             break;
         case EV_BEACON_TRACKED:
-            Serial.println("EV_BEACON_TRACKED");
+            Serial.println(F("EV_BEACON_TRACKED"));
             break;
         case EV_JOINING:
-            Serial.println("EV_JOINING");
+            Serial.println(F("EV_JOINING"));
             break;
         case EV_JOINED:
-            Serial.println("EV_JOINED");
+            Serial.println(F("EV_JOINED"));
             break;
         case EV_RFU1:
-            Serial.println("EV_RFU1");
+            Serial.println(F("EV_RFU1"));
             break;
         case EV_JOIN_FAILED:
-            Serial.println("EV_JOIN_FAILED");
+            Serial.println(F("EV_JOIN_FAILED"));
             break;
         case EV_REJOIN_FAILED:
-            Serial.println("EV_REJOIN_FAILED");
+            Serial.println(F("EV_REJOIN_FAILED"));
             break;
         case EV_TXCOMPLETE:
-            Serial.println("EV_TXCOMPLETE (includes waiting for RX windows)");
+            Serial.println(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
             if(LMIC.dataLen) {
                 // data received in rx slot after tx
-                Serial.print("Data Received: ");
+                Serial.print(F("Data Received: "));
                 Serial.write(LMIC.frame+LMIC.dataBeg, LMIC.dataLen);
                 Serial.println();
             }
@@ -124,23 +123,23 @@ void onEvent (ev_t ev) {
             os_setTimedCallback(&sendjob, os_getTime()+sec2osticks(TX_INTERVAL), do_send);
             break;
         case EV_LOST_TSYNC:
-            Serial.println("EV_LOST_TSYNC");
+            Serial.println(F("EV_LOST_TSYNC"));
             break;
         case EV_RESET:
-            Serial.println("EV_RESET");
+            Serial.println(F("EV_RESET"));
             break;
         case EV_RXCOMPLETE:
             // data received in ping slot
-            Serial.println("EV_RXCOMPLETE");
+            Serial.println(F("EV_RXCOMPLETE"));
             break;
         case EV_LINK_DEAD:
-            Serial.println("EV_LINK_DEAD");
+            Serial.println(F("EV_LINK_DEAD"));
             break;
         case EV_LINK_ALIVE:
-            Serial.println("EV_LINK_ALIVE");
+            Serial.println(F("EV_LINK_ALIVE"));
             break;
          default:
-            Serial.println("Unknown event");
+            Serial.println(F("Unknown event"));
             break;
     }
 }
@@ -202,19 +201,19 @@ void dhtTem()
       float humidity = DHT.read11(DHT11_PIN);
       float hum = DHT.humidity* 1.0;
 
-       Serial.print("###########    ");
-       Serial.print("NO.");
+      /* Serial.print(F("###########    "));
+       Serial.print(F("NO."));
        Serial.print(count);
-       Serial.println("    ###########");
-       Serial.println("The temperautre and humidity :");
-       Serial.print("[");
+       Serial.println(F("    ###########"));
+       Serial.println(F("The temperautre and humidity :"));
+       Serial.print(F("["));
        Serial.print(tem);
-       Serial.print("℃");
-       Serial.print(",");
+       Serial.print(F("℃"));
+       Serial.print(F(","));
        Serial.print(hum);
-       Serial.print("%");
-       Serial.print("]");
-       Serial.println("");
+       Serial.print(F("%"));
+       Serial.print(F("]"));
+       Serial.println("");*/
        count++;
        tem1=(tem*10);
        mydata[2] = tem1>>8;
@@ -227,14 +226,14 @@ void light(){
       int16_t lux;
       int val,val1;
       val=analogRead(PIN_A);
-      Serial.print("a:");
-      Serial.println(val);
+     // Serial.print(F("a:"));
+      //Serial.println(val);
       delay(500);
       val1=val*1.0;
       lux=val1;
       mydata[9]=lux>>8;
       mydata[10]=lux;
-       Serial.print(lux);
+       //Serial.print(lux);
 }
 void loop() {
     os_runloop_once();
